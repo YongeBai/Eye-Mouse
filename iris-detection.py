@@ -1,6 +1,7 @@
 import cv2 as cv
 import numpy as np
 import mediapipe as mp
+# win32api.SetCursorPos((x,y))
 
 capture = cv.VideoCapture(0)
 mp_face_mesh = mp.solutions.face_mesh

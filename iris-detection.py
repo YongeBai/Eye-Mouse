@@ -2,7 +2,6 @@ import cv2 as cv
 import mouse
 import numpy as np
 import mediapipe as mp
-# win32api.SetCursorPos((x,y))
 
 capture = cv.VideoCapture(0)
 mp_face_mesh = mp.solutions.face_mesh
@@ -26,8 +25,6 @@ while True:
     rgb_frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
     results = face_mesh.process(rgb_frame)
     if results.multi_face_landmarks:
-        # for point in results.multi_face_landmarks[0].landmark:
-            # face_mesh_points = np.array(np.multiply([point.x, point.y], [width,height]).astype(int))
         face_mesh_points = np.array([np.multiply([point.x, point.y], [width, height]).astype(int) for point in results.multi_face_landmarks[0].landmark])
         (left_cordx, left_cordy), radius_left = cv.minEnclosingCircle(face_mesh_points[left_iris])
         (right_cordx, right_cordy), radius_right = cv.minEnclosingCircle(face_mesh_points[right_iris])
@@ -41,6 +38,7 @@ while True:
         cv.circle(frame, center_left, radius_left, (0, 255, 0), 1, cv.LINE_AA)
         cv.circle(frame, center_right, radius_right, (0, 255, 0), 1, cv.LINE_AA)
 
+        # mouse movements
         print(mouse.get_position())
         mouse.move(left_cordx, left_cordy, absolute=True, duration=0)
 

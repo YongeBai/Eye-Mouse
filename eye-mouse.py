@@ -5,7 +5,6 @@ import mediapipe as mp
 import torch
 import sys
 
-
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 s = 0
 if len(sys.argv) > 1:
@@ -16,18 +15,20 @@ mp_face_mesh = mp.solutions.face_mesh
 face_mesh = mp_face_mesh.FaceMesh(refine_landmarks=True,
                                   # 0.0-1.0 min confidence from face detection to be
                                   # considered successful
-                                  min_tracking_confidence=0.5,
-                                  # 0.0-1.0 higher values more accurate more latency (hyper param)
-                                  min_detection_confidence=0.5)
+                                  min_tracking_confidence=0.96,
+                                  # 0.0-1.0 higher values more accurate more latency
+                                  min_detection_confidence=0.96)
+x_scale = 25
+y_scale = 35
+
 left_iris = [469, 470, 471, 472]
+
 n = 0
-prev_loc = []
-mouse.move(800, 450)
+prev_loc = (800, 450)
+mouse.move(prev_loc[0], prev_loc[1])
 
 while True:
     ret, frame = capture.read()
-    # frame = cv.flip(frame, 1)
-    frame = cv.resize(frame, dsize=(1600, 900))
     height, width, _ = frame.shape
 
     if ret is False:
@@ -40,77 +41,25 @@ while True:
         face_mesh_points = np.array([np.multiply([point.x, point.y], [width, height]).astype(int)
                                      for point in results.multi_face_landmarks[0].landmark])
 
-        (x, y), _ = cv.minEnclosingCircle(face_mesh_points[left_iris])
+        (x, y), _ = cv.minEnclosingCircle(face_mesh_points[points])
+        (x1, y1, w, h) = cv.boundingRect(face_mesh_points[left_iris])
+        cv.rectangle(frame, (x1, y1), (x1+w, y1+h), (255, 0, 0), 2)
 
-        prev_loc.append((x, y))
-        try:
-            diff = tuple(map(lambda i, j: i - j, prev_loc[n], prev_loc[n+1]))
-            mouse.move(diff[0] * 50, diff[1] * -50, absolute=False)
+        x_diff = prev_loc[0] - x
+        y_diff = y - prev_loc[1]
+        mouse.move(x_diff * x_scale, y_diff * y_scale, absolute=False, duration=0.05)
 
-            print(f"mouse position{mouse.get_position()}")
-            print(f"x_diff {diff[0]}")
-            print(f"y_diff {diff[1]}")
-        except:
-            continue
+        # print(f"mouse position{mouse.get_position()}")
+        # print(f"x_diff {x_diff}")
+        # print(f"y_diff {y_diff}")
+
+        prev_loc = (x, y)
         n += 1
 
-        # center1 = (int(x1), int(y1))
-        # cv.circle(frame, center1, int(radius1), (255, 255, 0), 1, cv.LINE_AA)
-
-
-        # mouse.move(x_diff*20, y_diff*20, absolute=False)
-        # print(f"x_diff: {x_diff}")
-        # print(f"y_diff: {y_diff}")
-        # print(mouse.get_position())
-
-
-        # cv.polylines(frame, [face_mesh_points[left_eye]], True, (0, 255, 0), 1, cv.LINE_AA)
-
-        # x1, x2 = face_mesh_points[471][0], face_mesh_points[469][0]
-        # y1, y2 = face_mesh_points[470][1], face_mesh_points[472][1]
-        # print(f"x-cords: {x1},{x2}")
-        # print(f"y-cords: {y1},{y2}")
-        # (x, y, w, h) = cv.boundingRect(face_mesh_points[left_iris])
-        # cv.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
-        # print(f"x-cords: {x},{x+w}")
-        # print(f"y-cords: {y},{y+h}")
-        # print(f"center cords: {(2*x+w)//2},{(2*y+w)//2}")
-        #
-        # frameCropped = frame[x:x+w, y:y+h]
-        # grayframe = cv.cvtColor(frameCropped, cv.COLOR_RGB2GRAY)
-        # cropResize = cv.resize(grayframe, dsize=(1280, 720))
-
-
-        # (fx, fy), _ = cv.minEnclosingCircle(cropResize)
-        # print(f"center cords: {fx},{fy}")
-
-        # (x, y, w, h) = cv.boundingRect(cropResize)
-        # fx = x + w/2
-        # fy = x + h/2
-
-        # (fx, fy), _= cv.minEnclosingCi1rcle(face_mesh_points[left_iris])
-        #
-        # mouse.move(fx, fy, absolute=True)
-        # print(mouse.get_position())
-
-
-        # mouse movements
-        # print(mouse.get_position())
-        # print(x, y)
-
-        # print(mouse.get_position())
-        # pyautogui.moveTo(x, y)
-        # pyautogui.moveRel(0, 1)
-        #
-
-
-
-    cv.imshow("Iris detection", frame)
-    #
-    # cv.imshow("EYE resize", cropResize)
-    # cv.imshow("gray", grayframe)
+    cv.imshow("Iris detection", cv.flip(frame, 1))
 
     if cv.waitKey(1) & 0xff == ord('q'):
         break
+
 capture.release()
 cv.destroyAllWindows()

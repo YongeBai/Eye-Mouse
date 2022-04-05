@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # TO INSTALL PACKAGES RUN
 # pip install -r requirements.txt
 
@@ -6,4 +7,14 @@ opencv
 torch
 numpy
 mouse
+=======
+# TO INSTALL PACKAGES RUN
+# pip install -r requirements.txt
+
+####  PACKAGE LIST
+opencv
+torch
+numpy
+mouse
+>>>>>>> a4e86b7414032ddc5e6e0f36611447ba276fd1f5
 mediapipe

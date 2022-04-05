@@ -41,9 +41,9 @@ while True:
         face_mesh_points = np.array([np.multiply([point.x, point.y], [width, height]).astype(int)
                                      for point in results.multi_face_landmarks[0].landmark])
 
-        (x, y), _ = cv.minEnclosingCircle(face_mesh_points[points])
-        (x1, y1, w, h) = cv.boundingRect(face_mesh_points[left_iris])
-        cv.rectangle(frame, (x1, y1), (x1+w, y1+h), (255, 0, 0), 2)
+        (x, y), _ = cv.minEnclosingCircle(face_mesh_points[left_iris])
+        (x, y, w, h) = cv.boundingRect(face_mesh_points[left_iris])
+        cv.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
 
         x_diff = prev_loc[0] - x
         y_diff = y - prev_loc[1]

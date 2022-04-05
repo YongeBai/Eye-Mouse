@@ -12,17 +12,17 @@ if len(sys.argv) > 1:
 
 capture = cv.VideoCapture(s)
 mp_face_mesh = mp.solutions.face_mesh
-face_mesh = mp_face_mesh.FaceMesh(refine_landmarks=False,
+face_mesh = mp_face_mesh.FaceMesh(refine_landmarks=True,
                                   # 0.0-1.0 min confidence from face detection to be
                                   # considered successful
                                   min_tracking_confidence=0.96,
                                   # 0.0-1.0 higher values more accurate more latency
                                   min_detection_confidence=0.96)
-x_scale = 30
-y_scale = 45
-
+x_scale = 25
+y_scale = 35
 
 points = [198,236,3,195,248,456,420,360,344,438,309,250,462,370,94,141,242,20,79,218,115,131,134,51,5,281,363,440,456,459,458,461,354,19,125,241,238,239,237,220,45,4,275,274,1,44,237,45,4]
+left_iris = [469, 470, 471, 472]
 
 n = 0
 prev_loc = (800, 450)
@@ -43,14 +43,16 @@ while True:
                                      for point in results.multi_face_landmarks[0].landmark])
 
         (x, y), _ = cv.minEnclosingCircle(face_mesh_points[points])
+        (x1, y1, w, h) = cv.boundingRect(face_mesh_points[left_iris])
+        cv.rectangle(frame, (x1, y1), (x1+w, y1+h), (255, 0, 0), 2)
 
         x_diff = prev_loc[0] - x
         y_diff = y - prev_loc[1]
-        mouse.move(x_diff * x_scale, y_diff * y_scale, absolute=False, duration=0.1)
+        mouse.move(x_diff * x_scale, y_diff * y_scale, absolute=False, duration=0.05)
 
-        print(f"mouse position{mouse.get_position()}")
-        print(f"x_diff {x_diff}")
-        print(f"y_diff {y_diff}")
+        # print(f"mouse position{mouse.get_position()}")
+        # print(f"x_diff {x_diff}")
+        # print(f"y_diff {y_diff}")
 
         prev_loc = (x, y)
         n += 1

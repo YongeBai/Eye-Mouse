@@ -1,9 +1,0 @@
-# TO INSTALL PACKAGES RUN
-# pip install -r requirements.txt
-
-####  PACKAGE LIST
-opencv
-torch
-numpy
-mouse
-mediapipe

@@ -25,4 +25,4 @@ The code has several parameters that can be modified to change its behavior:
 - `y_scale`: This is the scaling factor for the vertical mouse movement. Increasing this value will make the mouse move more for the same iris movement.
 
 ## Limitations
-The accuracy of the iris detection and tracking depends on the quality of the video frame and the lighting conditions. In low light or noisy environments, the detection and tracking may not work as well. The code also assumes that only one face is present in the frame, and it will only track the iris of the first detected face.
+The accuracy of the iris detection and tracking depends on the quality of the video frame and the lighting conditions. In low light or noisy environments, the detection and tracking may not work as well. Overall the quality of the tracking is not sufficient to use as a mouse replacement

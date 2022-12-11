@@ -3,9 +3,9 @@
 This project uses MediaPipe to detect and track the iris in a video stream and uses the iris position to move the mouse cursor on the screen. With Eye Mouse, you can control your cursor and interact with your computer simply by moving your eyes.
 
 ## Requirements
-MediaPipe
-OpenCV
-Mouse
+- MediaPipe
+- OpenCV
+- Mouse
 
 ## Usage
 To run the code, use the following command:

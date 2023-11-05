@@ -1,3 +1,17 @@
+import cv2 as cv
+import mouse
+import numpy as np
+import mediapipe as mp
+import torch
+import sys
+
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+s = 0
+if len(sys.argv) > 1:
+    s = sys.argv[1]
+
+capture = cv.VideoCapture(s)
+
 # create a face mesh solution for landmark detection and tracking
 mp_face_mesh = mp.solutions.face_mesh
 face_mesh = mp_face_mesh.FaceMesh(refine_landmarks=True,
